@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb")
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/community-help"
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URL || "mongodb://localhost:27017/community-help"
 
 async function seedDatabase() {
   const client = new MongoClient(MONGODB_URI)

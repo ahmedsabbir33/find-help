@@ -3,6 +3,8 @@ import jwt from "jsonwebtoken"
 import { connectDB } from "@/lib/mongodb"
 import { User } from "@/lib/models"
 
+const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key-change-in-production"
+
 export async function GET(request: NextRequest) {
   try {
     const token = request.cookies.get("token")?.value
@@ -11,7 +13,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: "Not authenticated" }, { status: 401 })
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallback-secret") as { userId: string }
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: string }
 
     await connectDB()
 

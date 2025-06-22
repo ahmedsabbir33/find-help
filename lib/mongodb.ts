@@ -1,9 +1,9 @@
 import mongoose from "mongoose"
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/community-help"
+const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_URL || "mongodb://localhost:27017/community-help"
 
 if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable")
+  throw new Error("Please define the MONGODB_URI or MONGODB_URL environment variable in .env.local")
 }
 
 let cached = global.mongoose
@@ -23,6 +23,7 @@ export async function connectDB() {
     }
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      console.log("Connected to MongoDB successfully")
       return mongoose
     })
   }
@@ -31,6 +32,7 @@ export async function connectDB() {
     cached.conn = await cached.promise
   } catch (e) {
     cached.promise = null
+    console.error("MongoDB connection error:", e)
     throw e
   }
 

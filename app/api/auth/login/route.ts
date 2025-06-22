@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken"
 import { connectDB } from "@/lib/mongodb"
 import { User } from "@/lib/models"
 
+const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key-change-in-production"
+
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
@@ -27,7 +29,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create JWT token
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || "fallback-secret", { expiresIn: "7d" })
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "7d" })
 
     // Create response
     const response = NextResponse.json({
